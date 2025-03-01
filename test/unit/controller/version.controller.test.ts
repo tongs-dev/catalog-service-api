@@ -7,7 +7,6 @@ import { VersionDao } from "../../../src/dao/version.dao";
 import { CreateVersionRequestDto, UpdateVersionRequestDto } from "../../../src/dto/request.dto";
 import { TestUtil } from "../../util/util";
 
-
 describe("VersionController (Unit Test)", () => {
     const BASE_URL = "/versions";
     const URL_WITH_ID = (id: string): string => `/versions/${id}`;

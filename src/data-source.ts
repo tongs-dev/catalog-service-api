@@ -5,9 +5,9 @@ import { DataSource, DataSourceOptions } from "typeorm";
 import { Service } from "./entity/service.entity";
 import { Version } from "./entity/version.entity";
 
-// Load .env.test for test env
+// Load .env for test environment
 if (process.env.NODE_ENV === "test") {
-    dotenv.config({ path: ".env.test" });
+    dotenv.config({ path: ".env" });
 }
 
 const options: DataSourceOptions = {
