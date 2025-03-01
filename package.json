@@ -1,10 +1,10 @@
 {
-    "name": "express-typescript-starter",
+    "name": "catalog-service-api",
     "version": "0.1.0",
-    "description": "",
+    "description": "Catalog Service API",
     "repository": {
         "type": "git",
-        "url": ""
+        "url": "https://github.com/tongs-dev/catalog-service-api.git"
     },
     "author": "Tong Shi",
     "scripts": {
@@ -12,8 +12,8 @@
         "build": "npm run clean && tsc",
         "debug": "npm run build && npm run watch-debug",
         "lint": "tsc --noEmit && eslint \"**/*.{js,ts}\" --quiet --fix",
-        "serve-debug": "nodemon --inspect dist/server.js",
-        "serve": "node dist/server.js",
+        "serve-debug": "nodemon --inspect dist/app.js",
+        "serve": "node dist/app.js",
         "start": "npm run serve",
         "test": "jest --forceExit --coverage --verbose --runInBand",
         "typeorm": "typeorm-ts-node-commonjs",
