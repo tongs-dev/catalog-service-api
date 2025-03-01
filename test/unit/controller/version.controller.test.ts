@@ -52,6 +52,25 @@ describe("VersionController (Unit Test)", () => {
             // Given
             const serviceId = TestUtil.generateUUIDString();
             const name = "Version 1.0";
+            const description = "description";
+            const expectedResponse = TestUtil.createMockVersionResponse(serviceId, name);
+            mockVersionDao.createVersion.mockResolvedValue(expectedResponse);
+
+            // When
+            const response = await request(app.getHttpServer())
+                .post(BASE_URL)
+                .send({ serviceId, name, description })
+                .expect(201);
+
+            // Then
+            expect(response.body).toEqual(expectedResponse);
+            expect(versionDao.createVersion).toHaveBeenCalledWith({ serviceId, name, description });
+        });
+
+        it("given payload with missing field -> should return 400", async () => {
+            // Given
+            const serviceId = TestUtil.generateUUIDString();
+            const name = "Version 1.0";
             const expectedResponse = TestUtil.createMockVersionResponse(serviceId, name);
             mockVersionDao.createVersion.mockResolvedValue(expectedResponse);
 
@@ -59,11 +78,15 @@ describe("VersionController (Unit Test)", () => {
             const response = await request(app.getHttpServer())
                 .post(BASE_URL)
                 .send({ serviceId, name })
-                .expect(201);
+                .expect(400);
 
             // Then
-            expect(response.body).toEqual(expectedResponse);
-            expect(versionDao.createVersion).toHaveBeenCalledWith(serviceId, name);
+            expect(response.body).toEqual({
+                statusCode: 400,
+                message: ["description must be between 1 and 500 characters", "description must be a string"],
+                error: "Bad Request",
+            });
+            expect(versionDao.createVersion).not.toHaveBeenCalled();
         });
 
         it("given duplicate version name -> should return 409", async () => {
@@ -71,6 +94,7 @@ describe("VersionController (Unit Test)", () => {
             const createVersionDto: CreateVersionRequestDto = {
                 serviceId: TestUtil.generateUUIDString(),
                 name: "Version 1.0",
+                description: "description",
             };
             mockVersionDao.createVersion.mockResolvedValue(null);
 
@@ -89,6 +113,7 @@ describe("VersionController (Unit Test)", () => {
             const createVersionDto: CreateVersionRequestDto = {
                 serviceId: TestUtil.generateUUIDString(),
                 name: "Version 1.0",
+                description: "description",
             };
             mockVersionDao.createVersion.mockRejectedValue(new Error("Unexpected error"));
 
@@ -198,7 +223,7 @@ describe("VersionController (Unit Test)", () => {
 
             // Then
             expect(response.body).toEqual(expectedResponse);
-            expect(versionDao.updateVersion).toHaveBeenCalledWith(versionId, newVersionName);
+            expect(versionDao.updateVersion).toHaveBeenCalledWith(versionId, { name: newVersionName });
         });
 
         it("given unknown path param -> should return 404", async () => {

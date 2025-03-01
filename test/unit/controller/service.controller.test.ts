@@ -265,6 +265,27 @@ describe("ServiceController (Unit Test)", () => {
             expect(serviceDao.createService).not.toHaveBeenCalled();
         });
 
+        it("given payload with missing field -> should return 400", async () => {
+            // Given
+            const invalidPayload = {
+                name: "service to create",
+            };
+
+            // When
+            const response = await request(app.getHttpServer())
+                .post(BASE_API_URL)
+                .send(invalidPayload)
+                .expect(400);
+
+            // Then
+            expect(response.body).toEqual({
+                statusCode: 400,
+                message: ["description must be between 1 and 500 characters", "description must be a string"],
+                error: "Bad Request",
+            });
+            expect(serviceDao.createService).not.toHaveBeenCalled();
+        });
+
         it("given internal server error -> should return 500", async () => {
             // Given
             const serviceData: CreateServiceRequestDto = {

@@ -26,11 +26,9 @@ export class VersionController {
 
     @Post()
     @UsePipes(new ValidationPipe({ whitelist: true, transform: true, forbidNonWhitelisted: true }))
-    async createVersion(@Body() createVersionDto: CreateVersionRequestDto): Promise<VersionResponseDto> {
+    async createVersion(@Body() newVersion: CreateVersionRequestDto): Promise<VersionResponseDto> {
         try {
-            const result = await this.versionDao.createVersion(
-                createVersionDto.serviceId, createVersionDto.name
-            );
+            const result = await this.versionDao.createVersion(newVersion);
 
             if (!result) {
                 throw new ConflictException("Duplicate version name for this service");
@@ -70,10 +68,10 @@ export class VersionController {
     @UsePipes(new ValidationPipe({ whitelist: true, transform: true, forbidNonWhitelisted: true }))
     async updateVersion(
         @Param() params: VersionRequestPathParamDto,
-        @Body() updateVersionDto: UpdateVersionRequestDto
+        @Body() updateData: UpdateVersionRequestDto
     ): Promise<VersionResponseDto> {
         try {
-            const result = await this.versionDao.updateVersion(params.id, updateVersionDto.name);
+            const result = await this.versionDao.updateVersion(params.id, updateData);
 
             if (!result) {
                 throw new NotFoundException(`Version with ID ${params.id} not found`);

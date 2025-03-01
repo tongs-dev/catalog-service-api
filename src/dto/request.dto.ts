@@ -1,8 +1,7 @@
-import { Length, IsEnum, IsInt, IsOptional,IsString, IsUUID, Max, MaxLength, Min } from "class-validator";
+import { Length, IsEnum, IsInt, IsOptional,IsString, IsUUID, Max, Min } from "class-validator";
 import { Transform, Type } from "class-transformer";
 
 import { Service } from "../entity/service.entity";
-import {Optional} from "@nestjs/common";
 
 export class ServicesWithVersionCountRequestDto {
     @IsOptional()
@@ -44,7 +43,7 @@ export class CreateServiceRequestDto {
     name: string;
 
     @IsString()
-    @MaxLength(500, { message: "description must be at most 500 characters" })
+    @Length(1, 500, { message: "description must be between 1 and 500 characters" })
     description: string;
 }
 
@@ -61,7 +60,7 @@ export class UpdateServiceRequestDto {
 
     @IsOptional()
     @IsString()
-    @MaxLength(500, { message: "description must be at most 500 characters" })
+    @Length(1, 500, { message: "description must be between 1 and 500 characters" })
     description?: string;
 }
 
@@ -72,6 +71,10 @@ export class CreateVersionRequestDto {
     @IsString()
     @Length(1, 255, { message: "version name must be between 1 and 255 characters" })
     name: string;
+
+    @IsString()
+    @Length(1, 500, { message: "description must be between 1 and 500 characters" })
+    description: string;
 }
 
 export class UpdateVersionRequestDto {
@@ -79,6 +82,11 @@ export class UpdateVersionRequestDto {
     @IsString()
     @Length(1, 255, { message: "version name must be between 1 and 255 characters" })
     name?: string;
+
+    @IsOptional()
+    @IsString()
+    @Length(1, 500, { message: "description must be between 1 and 500 characters" })
+    description?: string;
 }
 
 export class VersionRequestPathParamDto {

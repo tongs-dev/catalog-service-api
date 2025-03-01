@@ -7,6 +7,7 @@ import { TestUtil } from "../../util/util";
 
 describe("VersionDAO (Integration Test)", () => {
     const mockService = TestUtil.createMockService(TestUtil.generateUUIDString(), new Date());
+    const mockVersion = TestUtil.createMockVersion(mockService.id, "V1.0");
 
     let db: DataSource;
     let serviceDao: ServiceDao;
@@ -22,6 +23,7 @@ describe("VersionDAO (Integration Test)", () => {
 
     beforeEach(async () => {
         await serviceDao.createService(mockService);
+        await versionDao.createVersion(mockVersion);
     });
 
     afterEach(async () => {
@@ -30,11 +32,16 @@ describe("VersionDAO (Integration Test)", () => {
 
     describe("createVersion", () => {
         it("given new version -> should create version", async () => {
-            const result = await versionDao.createVersion(mockService.id, "V1.1.10");
+            // Given, When
+            const result = await versionDao.createVersion(
+                TestUtil.createMockVersion(mockService.id, "V1.1.10")
+            );
 
+            // Then
             const expected = {
                 id: expect.any(String),
                 name: "V1.1.10",
+                description: expect.any(String),
                 serviceId: mockService.id,
                 createdAt: expect.any(Date),
                 updatedAt: expect.any(Date),
@@ -44,24 +51,31 @@ describe("VersionDAO (Integration Test)", () => {
         });
 
         it("given new version violate idx_version_name_service constraint -> should do nothing", async () => {
-            await versionDao.createVersion(mockService.id, "V1.1.10");
-            const result = await versionDao.createVersion(mockService.id, "V1.1.10");
+            // Given, When
+            const result = await versionDao.createVersion(TestUtil.createMockVersion(mockService.id, "V1.0"));
 
+            // Then
             expect(result).toBeNull();
         });
     });
 
     describe("getVersionById", () => {
         it("given valid version id -> should return version", async () => {
+            // Given
             const versionName = "new version";
-            const version = await versionDao.createVersion(mockService.id, "new version");
+            const version = await versionDao.createVersion(
+                TestUtil.createMockVersion(mockService.id, "new version")
+            );
             expect(version).not.toBeNull();
 
+            // When
             const result = await versionDao.getVersionById(version.id);
 
+            // Then
             const expected = {
                 id: version.id,
                 name: versionName,
+                description: version.description,
                 serviceId: mockService.id,
                 createdAt: version.createdAt,
                 updatedAt: version.updatedAt,
@@ -71,22 +85,33 @@ describe("VersionDAO (Integration Test)", () => {
         });
 
         it("given unknown version id -> should return version", async () => {
+            // Given, When
             const result = await versionDao.getVersionById(TestUtil.generateUUIDString());
 
+            // Then
             expect(result).toBeNull();
         });
     });
 
     describe("updateVersion", () => {
         it("given valid version id -> should update version", async () => {
-            const oldVersion = await versionDao.createVersion(mockService.id, "version name");
+            // Given
+            const oldVersion = await versionDao.createVersion(
+                TestUtil.createMockVersion(mockService.id, "version name")
+            );
             const newVersionName = "new name";
 
-            const result = await versionDao.updateVersion(oldVersion.id, newVersionName);
+            // When
+            const result = await versionDao.updateVersion(
+                oldVersion.id,
+                { name: newVersionName },
+            );
 
+            // Then
             const expected = {
                 id: oldVersion.id,
                 name: newVersionName,
+                description: oldVersion.description,
                 serviceId: mockService.id,
                 createdAt: oldVersion.createdAt,
                 updatedAt: expect.any(Date),
@@ -97,35 +122,30 @@ describe("VersionDAO (Integration Test)", () => {
         });
 
         it("given unknown version id -> should do nothing version", async () => {
-            const result = await versionDao.updateVersion(TestUtil.generateUUIDString(), "new name");
+            // Given, When
+            const result = await versionDao.updateVersion(
+                TestUtil.generateUUIDString(),
+                { name: "new name" },
+            );
 
+            // Then
             expect(result).toBeNull();
         });
     });
 
     describe("deleteVersion", () => {
         it("given valid version id -> should delete version", async () => {
-            // Given
-            const service = TestUtil.createMockService("new service");
-            await serviceDao.createService(service);
-            const version = await versionDao.createVersion(service.id, "V1.0");
-
-            // When
-            const result = await versionDao.deleteVersion(version.id);
+            // Given, When
+            const result = await versionDao.deleteVersion(mockVersion.id);
 
             // Then
             expect(result).toBeTruthy();
-            const versionResult = await versionDao.getVersionById(version.id);
+            const versionResult = await versionDao.getVersionById(mockVersion.id);
             expect(versionResult).toBeNull();
         });
 
         it("given unknown version id -> should return false", async () => {
-            // Given
-            const service = TestUtil.createMockService("new service");
-            await serviceDao.createService(service);
-            await versionDao.createVersion(service.id, "V1.0");
-
-            // When
+            // Given, When
             const result = await versionDao.deleteVersion(TestUtil.generateUUIDString());
 
             // Then

@@ -1,5 +1,7 @@
 import { Service } from "../../src/entity/service.entity";
+import { Version } from "../../src/entity/version.entity";
 import {ServiceWithVersionCountResponseDto, VersionResponseDto} from "../../src/dto/response.dto";
+import {VersionDao} from "../../src/dao/version.dao";
 
 /**
  * Helper methods used to mock request / response objects.
@@ -16,6 +18,16 @@ export class TestUtil {
             description:  TestUtil.generateUUIDString(),
             created_at: createAt,
         } as Service;
+    }
+
+    static createMockVersion(serviceId: string, name: string, createAt: Date = new Date()): Version {
+        return {
+            id: TestUtil.generateUUIDString(),
+            service: {id: serviceId},
+            name,
+            description:  TestUtil.generateUUIDString(),
+            created_at: createAt,
+        } as Version;
     }
 
     static createMockServiceWithVersionCountResponse(): ServiceWithVersionCountResponseDto {

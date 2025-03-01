@@ -29,6 +29,7 @@ export class ResponseDtoTransformer {
         return {
             id: version.id,
             name: version.name,
+            description: version.description,
             createdAt: version.created_at,
             updatedAt: version.updated_at,
         };
@@ -48,6 +49,7 @@ export class ResponseDtoTransformer {
         return {
             id: version.id,
             name: version.name,
+            description: version.description,
             createdAt: version.created_at,
             updatedAt: version.updated_at,
             serviceId: version.service.id,

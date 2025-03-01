@@ -26,11 +26,11 @@ describe("serviceDao (Integration Test)", () => {
 
     beforeEach(async () => {
         await serviceDao.createService(mockServiceA);
-        await versionDao.createVersion(mockServiceA.id, "V1.0");
-        await versionDao.createVersion(mockServiceA.id, "V2.0");
+        await versionDao.createVersion(TestUtil.createMockVersion(mockServiceA.id, "V1.0"));
+        await versionDao.createVersion(TestUtil.createMockVersion(mockServiceA.id, "V2.0"));
 
         await serviceDao.createService(mockServiceB);
-        await versionDao.createVersion(mockServiceB.id, "V1.0");
+        await versionDao.createVersion(TestUtil.createMockVersion(mockServiceB.id, "V1.0"));
     });
 
     afterEach(async () => {
@@ -109,12 +109,14 @@ describe("serviceDao (Integration Test)", () => {
                     {
                         id: expect.any(String),
                         name: "V1.0",
+                        description: expect.any(String),
                         createdAt: expect.any(Date),
                         updatedAt: expect.any(Date),
                     },
                     {
                         id: expect.any(String),
                         name: "V2.0",
+                        description: expect.any(String),
                         createdAt: expect.any(Date),
                         updatedAt: expect.any(Date),
                     },
@@ -201,7 +203,9 @@ describe("serviceDao (Integration Test)", () => {
             // Given
             const service = TestUtil.createMockService("new service");
             await serviceDao.createService(service);
-            const version = await versionDao.createVersion(service.id, "V1.0");
+            const version = await versionDao.createVersion(
+                TestUtil.createMockVersion(service.id, "V1.0")
+            );
 
             // When
             const result = await serviceDao.deleteService(service.id);

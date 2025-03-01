@@ -28,6 +28,7 @@ export class CreateTables1740797178687 implements MigrationInterface {
                 id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                 service_id UUID NOT NULL,
                 name VARCHAR(255) NOT NULL,
+                description VARCHAR(500) NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 CONSTRAINT fk_version_service FOREIGN KEY (service_id) REFERENCES service(id) ON DELETE CASCADE
