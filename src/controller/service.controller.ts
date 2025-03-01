@@ -14,11 +14,8 @@ import {
 
 
 import { ServiceDao } from "../dao/service.dao";
-import {GetAllServicesDto, GetServiceDetailDto} from "../dto/request.dto";
-import {
-    ServiceDetailResponseDto,
-    ServiceWithVersionCountResponseDto,
-} from "../dto/response.dto";
+import {ServicesWithVersionCountRequestDto, ServiceWithVersionsRequestDto} from "../dto/request.dto";
+import { ServiceWithVersionCountResponseDto, ServiceWithVersionsResponseDto } from "../dto/response.dto";
 
 @Controller("services")
 export class ServiceController {
@@ -30,9 +27,9 @@ export class ServiceController {
      */
     @Get()
     @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
-    async getAllServices(@Query() query: GetAllServicesDto): Promise<ServiceWithVersionCountResponseDto[]> {
+    async getServices(@Query() query: ServicesWithVersionCountRequestDto): Promise<ServiceWithVersionCountResponseDto[]> {
         try {
-            return this.serviceDao.getAllServicesWithVersionCount(
+            return this.serviceDao.getServicesWithVersionCount(
                 query.page,
                 query.limit,
                 query.name,
@@ -45,11 +42,11 @@ export class ServiceController {
 
     }
 
-    @Get(":id")
+    @Get(":id/versions")
     @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
-    async getServiceDetail(@Param() params: GetServiceDetailDto): Promise<ServiceDetailResponseDto> {
+    async getServiceWithVersions(@Param() params: ServiceWithVersionsRequestDto): Promise<ServiceWithVersionsResponseDto> {
         try {
-            const service = await this.serviceDao.getServiceDetail(params.id);
+            const service = await this.serviceDao.getServiceWithVersions(params.id);
 
             if (!service) {
                 throw new NotFoundException(`Service with ID ${params.id} not found`);

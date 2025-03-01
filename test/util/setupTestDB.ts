@@ -46,8 +46,16 @@ export const setupTestDB = async (): Promise<TestDBSetup> => {
 /**
  * Cleans up the database connection.
  */
-export const teardownTestDB = async () => {
+export const teardownTestDB = async (): Promise<void> => {
     if (dataSource.isInitialized) {
         await dataSource.destroy();
     }
+};
+
+/**
+ * Cleans up the database tables.
+ */
+export const cleanTables = async (db: DataSource): Promise<void> => {
+    await db.query("DELETE FROM version;");
+    await db.query("DELETE FROM service;");
 };

@@ -24,7 +24,7 @@ export class TestUtil {
         } as ServiceWithVersionCountResponseDto;
     }
 
-    static createMockServiceDetailResponse() {
+    static createMockServiceWithVersionsResponse() {
         return {
             id: TestUtil.generateUUIDString(),
             name: TestUtil.generateUUIDString(),

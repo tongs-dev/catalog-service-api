@@ -3,9 +3,9 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 
 import {
-    ServiceDetailResponseDto,
     ServiceResponseDto,
-    ServiceWithVersionCountResponseDto
+    ServiceWithVersionCountResponseDto,
+    ServiceWithVersionsResponseDto,
 } from "../dto/response.dto";
 import { ResponseDtoTransformer } from "../dto/response-dto-transformer";
 import { Service } from "../entity/service.entity";
@@ -18,7 +18,7 @@ export class ServiceDao {
         private readonly serviceRepository: Repository<Service>,
     ) {}
 
-    async getAllServicesWithVersionCount(
+    async getServicesWithVersionCount(
         page: number,
         limit: number,
         name?: string,
@@ -54,7 +54,7 @@ export class ServiceDao {
         );
     }
 
-    async getServiceDetail(id: string): Promise<ServiceDetailResponseDto> {
+    async getServiceWithVersions(id: string): Promise<ServiceWithVersionsResponseDto> {
         const result = await this.serviceRepository.findOne({
             where: { id },
             relations: ["versions"],

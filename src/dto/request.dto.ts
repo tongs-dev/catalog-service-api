@@ -3,7 +3,7 @@ import {Transform, Type} from "class-transformer";
 
 import { Service } from "../entity/service.entity";
 
-export class GetAllServicesDto {
+export class ServicesWithVersionCountRequestDto {
     @IsOptional()
     @Type(() => Number)
     @IsInt({ message: "page must be an integer" })
@@ -32,7 +32,7 @@ export class GetAllServicesDto {
     order?: "ASC" | "DESC" = "DESC";
 }
 
-export class GetServiceDetailDto {
+export class ServiceWithVersionsRequestDto {
     @IsUUID("4", { message: "invalid ID format. Must be a UUID v4." })
     id: string;
 }

@@ -3,7 +3,7 @@ import { DataSource } from "typeorm";
 import { ServiceDao } from "../../../src/dao/service.dao";
 import { VersionDao } from "../../../src/dao/version.dao";
 import { ResponseDtoTransformer } from "../../../src/dto/response-dto-transformer";
-import { setupTestDB, teardownTestDB } from "../../util/setupTestDB";
+import { cleanTables, setupTestDB, teardownTestDB } from "../../util/setupTestDB";
 import { TestUtil } from "../../util/util";
 
 describe("serviceDao (Integration Test)", () => {
@@ -34,13 +34,12 @@ describe("serviceDao (Integration Test)", () => {
     });
 
     afterEach(async () => {
-        await db.query("DELETE FROM version;");
-        await db.query("DELETE FROM service;");
+        await cleanTables(db);
     });
 
     describe("getAllServicesWithVersionCount", () => {
         it("should return all services", async () => {
-            const result = await serviceDao.getAllServicesWithVersionCount(1, 10);
+            const result = await serviceDao.getServicesWithVersionCount(1, 10);
 
             expect(result).toHaveLength(2);
 
@@ -53,20 +52,20 @@ describe("serviceDao (Integration Test)", () => {
         });
 
         it("given large offset -> should return nothing", async () => {
-            const result = await serviceDao.getAllServicesWithVersionCount(10, 10);
+            const result = await serviceDao.getServicesWithVersionCount(10, 10);
 
             expect(result).toHaveLength(0);
         });
 
         it("given limit -> should return subset", async () => {
-            const result = await serviceDao.getAllServicesWithVersionCount(1, 1);
+            const result = await serviceDao.getServicesWithVersionCount(1, 1);
 
             expect(result).toHaveLength(1);
             expect(result[0]).toEqual(ResponseDtoTransformer.toServiceWithVersionCountDto(mockServiceB, 1));
         });
 
         it("given sort by and order by -> should return services in sorted order", async () => {
-            const result = await serviceDao.getAllServicesWithVersionCount(1, 10, null, "name", "ASC");
+            const result = await serviceDao.getServicesWithVersionCount(1, 10, null, "name", "ASC");
 
             expect(result).toHaveLength(2);
 
@@ -79,7 +78,7 @@ describe("serviceDao (Integration Test)", () => {
         });
 
         it("given unknown service name -> should return nothing", async () => {
-            const result = await serviceDao.getAllServicesWithVersionCount(1, 10, "unknown name");
+            const result = await serviceDao.getServicesWithVersionCount(1, 10, "unknown name");
 
             expect(result).toHaveLength(0);
         });
@@ -89,7 +88,7 @@ describe("serviceDao (Integration Test)", () => {
 
             await serviceDao.createService(mockSameNameService);
 
-            const result = await serviceDao.getAllServicesWithVersionCount(1, 10, "A");
+            const result = await serviceDao.getServicesWithVersionCount(1, 10, "A");
             expect(result).toHaveLength(2);
             expect(result[0]).toEqual(ResponseDtoTransformer.toServiceWithVersionCountDto(mockSameNameService, 0));
             expect(result[1]).toEqual(ResponseDtoTransformer.toServiceWithVersionCountDto(mockServiceA, 2));
@@ -98,7 +97,7 @@ describe("serviceDao (Integration Test)", () => {
 
     describe("getServiceDetail", () => {
         it("given service id -> should return service detail", async () => {
-            const result = await serviceDao.getServiceDetail(mockServiceA.id);
+            const result = await serviceDao.getServiceWithVersions(mockServiceA.id);
 
             const expected = {
                 id: mockServiceA.id,
@@ -126,7 +125,7 @@ describe("serviceDao (Integration Test)", () => {
         });
 
         it("given unknown service id -> should return nothing", async () => {
-            const result = await serviceDao.getServiceDetail(TestUtil.generateUUIDString());
+            const result = await serviceDao.getServiceWithVersions(TestUtil.generateUUIDString());
 
             expect(result).toBeNull();
         });
@@ -148,7 +147,7 @@ describe("serviceDao (Integration Test)", () => {
         });
 
         it("given unknown service id -> should return nothing", async () => {
-            const result = await serviceDao.getServiceDetail(TestUtil.generateUUIDString());
+            const result = await serviceDao.getServiceWithVersions(TestUtil.generateUUIDString());
 
             expect(result).toBeNull();
         });
@@ -175,7 +174,7 @@ describe("serviceDao (Integration Test)", () => {
     describe("updateService", () => {
         it("given updated service -> should update service", async () => {
             const newName = "new name";
-            const oldService = await serviceDao.getServiceDetail(mockServiceB.id);
+            const oldService = await serviceDao.getServiceWithVersions(mockServiceB.id);
             const result = await serviceDao.updateService(oldService.id, {name: newName});
 
             const expected = {
@@ -209,7 +208,7 @@ describe("serviceDao (Integration Test)", () => {
 
             // Then
             expect(result).toBeTruthy();
-            const serviceResult = await serviceDao.getServiceDetail(service.id);
+            const serviceResult = await serviceDao.getServiceWithVersions(service.id);
             expect(serviceResult).toBeNull();
             const versionResult = await versionDao.getVersionById(version.id);
             expect(versionResult).toBeNull();

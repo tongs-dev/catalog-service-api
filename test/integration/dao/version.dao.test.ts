@@ -2,7 +2,7 @@ import { DataSource } from "typeorm";
 
 import { ServiceDao } from "../../../src/dao/service.dao";
 import { VersionDao } from "../../../src/dao/version.dao";
-import { setupTestDB, teardownTestDB } from "../../util/setupTestDB";
+import {cleanTables, setupTestDB, teardownTestDB} from "../../util/setupTestDB";
 import { TestUtil } from "../../util/util";
 
 describe("VersionDAO (Integration Test)", () => {
@@ -25,8 +25,7 @@ describe("VersionDAO (Integration Test)", () => {
     });
 
     afterEach(async () => {
-        await db.query("DELETE FROM version;");
-        await db.query("DELETE FROM service;");
+        await cleanTables(db);
     });
 
     describe("createVersion", () => {

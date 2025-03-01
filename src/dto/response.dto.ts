@@ -26,6 +26,6 @@ export class ServiceResponseDto {
     updatedAt: Date;
 }
 
-export class ServiceDetailResponseDto extends ServiceResponseDto {
+export class ServiceWithVersionsResponseDto extends ServiceResponseDto {
     versions: ServiceVersionResponseDto[];
 }

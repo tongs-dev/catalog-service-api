@@ -1,10 +1,10 @@
 import {Service} from "../entity/service.entity";
 import {Version} from "../entity/version.entity";
 import {
-    ServiceDetailResponseDto,
     ServiceResponseDto,
     ServiceVersionResponseDto,
     ServiceWithVersionCountResponseDto,
+    ServiceWithVersionsResponseDto,
     VersionResponseDto
 } from "./response.dto";
 
@@ -18,7 +18,7 @@ export class ResponseDtoTransformer {
         };
     }
 
-    static toServiceDetailDto(service: Service): ServiceDetailResponseDto {
+    static toServiceDetailDto(service: Service): ServiceWithVersionsResponseDto {
         return {
             ...ResponseDtoTransformer.toServiceDto(service),
             versions: (service.versions ?? []).map(ResponseDtoTransformer.toServiceVersionDto),

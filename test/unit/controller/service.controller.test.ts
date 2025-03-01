@@ -14,8 +14,8 @@ describe("ServiceController (Unit Test)", () => {
     let serviceDao: ServiceDao;
 
     const mockServiceDao = {
-        getAllServicesWithVersionCount: jest.fn(),
-        getServiceDetail: jest.fn(),
+        getServicesWithVersionCount: jest.fn(),
+        getServiceWithVersions: jest.fn(),
     };
 
     beforeAll(async () => {
@@ -44,7 +44,10 @@ describe("ServiceController (Unit Test)", () => {
     });
 
     describe("GET /services", () => {
+        const API_URL = "/services";
+
         it("should return an array of services with version count", async () => {
+            // Given
             const query = {
                 page: 1,
                 limit: 10,
@@ -56,15 +59,17 @@ describe("ServiceController (Unit Test)", () => {
                 TestUtil.createMockServiceWithVersionCountResponse(),
                 TestUtil.createMockServiceWithVersionCountResponse(),
             ];
-            mockServiceDao.getAllServicesWithVersionCount.mockResolvedValue(expectedResponse);
+            mockServiceDao.getServicesWithVersionCount.mockResolvedValue(expectedResponse);
 
+            // When
             const response = await request(app.getHttpServer())
-                .get("/services")
+                .get(API_URL)
                 .query(query)
                 .expect(200);
 
+            // Then
             expect(response.body).toEqual(expectedResponse);
-            expect(serviceDao.getAllServicesWithVersionCount).toHaveBeenCalledWith(
+            expect(serviceDao.getServicesWithVersionCount).toHaveBeenCalledWith(
                 query.page,
                 query.limit,
                 query.name,
@@ -74,6 +79,7 @@ describe("ServiceController (Unit Test)", () => {
         });
 
         it("given invalid query param -> should return 400", async () => {
+            // Given
             const query = {
                 sortBy: "unknown_field",
                 limit: 10000,
@@ -84,64 +90,80 @@ describe("ServiceController (Unit Test)", () => {
                 "statusCode": 400
             };
 
+            // When
             const response = await request(app.getHttpServer())
-                .get("/services")
+                .get(API_URL)
                 .query(query)
                 .expect(400);
 
+            // Then
             expect(response.body).toEqual(expectedResponse);
-            expect(serviceDao.getAllServicesWithVersionCount).not.toHaveBeenCalled();
+            expect(serviceDao.getServicesWithVersionCount).not.toHaveBeenCalled();
         });
 
         it("given internal server error -> should return 500", async () => {
-            mockServiceDao.getAllServicesWithVersionCount.mockRejectedValue(new Error("Unexpected error"));
+            // Given
+            mockServiceDao.getServicesWithVersionCount.mockRejectedValue(new Error("Unexpected error"));
 
-            const response = await request(app.getHttpServer()).get("/services").expect(500);
+            // When
+            const response = await request(app.getHttpServer()).get(API_URL).expect(500);
 
+            // Then
             expect(response.body).toEqual({
                 statusCode: 500,
                 message: "Internal server error",
             });
-            expect(serviceDao.getAllServicesWithVersionCount).toHaveBeenCalled();
+            expect(serviceDao.getServicesWithVersionCount).toHaveBeenCalled();
         });
     });
 
-    describe("GET /services/:id", () => {
-        it("should return service with versions in detail", async () => {
-            const expectedResponse = TestUtil.createMockServiceDetailResponse();
-            mockServiceDao.getServiceDetail.mockResolvedValue(expectedResponse);
+    describe("GET /services/:id/versions", () => {
+        const API_URL = (id: string): string => `/services/${id}/versions`;
 
+        it("should return service with versions in detail", async () => {
+            // Given
+            const expectedResponse = TestUtil.createMockServiceWithVersionsResponse();
+            mockServiceDao.getServiceWithVersions.mockResolvedValue(expectedResponse);
+
+            // When
             const response = await request(app.getHttpServer())
-                .get(`/services/${expectedResponse.id}`)
+                .get(API_URL(expectedResponse.id))
                 .expect(200);
 
+            // Then
             expect(response.body).toEqual(expectedResponse);
-            expect(serviceDao.getServiceDetail).toHaveBeenCalledWith(expectedResponse.id);
+            expect(serviceDao.getServiceWithVersions).toHaveBeenCalledWith(expectedResponse.id);
         });
 
         it("given unknown service id -> should return 404", async () => {
+            // Given
             const unknownId = "f016e69f-e76d-4968-8100-77e4a0bff2c9";
-            mockServiceDao.getServiceDetail.mockResolvedValue(null);
+            mockServiceDao.getServiceWithVersions.mockResolvedValue(null);
 
+            // When
             const response = await request(app.getHttpServer())
-                .get(`/services/${unknownId}`)
+                .get(API_URL(unknownId))
                 .expect(404);
 
+            // Then
             expect(response.body).toEqual({
                 statusCode: 404,
                 message: `Service with ID ${unknownId} not found`,
                 error: "Not Found",
             });
-            expect(serviceDao.getServiceDetail).toHaveBeenCalledWith(unknownId);
+            expect(serviceDao.getServiceWithVersions).toHaveBeenCalledWith(unknownId);
         });
 
         it("given invalid service id -> should return 400", async () => {
+            // Given
             const invalidId = "12345";
 
+            // When
             const response = await request(app.getHttpServer())
-                .get(`/services/${invalidId}`)
+                .get(API_URL(invalidId))
                 .expect(400);
 
+            // Then
             expect(response.body).toEqual({
                 statusCode: 400,
                 message: ["invalid ID format. Must be a UUID v4."],
