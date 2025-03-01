@@ -41,8 +41,5 @@ for var in "$@"; do
     elif [[ "$var" == "run-tests" ]]; then
         echo "Running tests..."
         npm run test
-    elif [[ "$var" == "run-tests" ]]; then
-        echo "Linting..."
-        npm run lint
     fi
 done

@@ -1,9 +1,5 @@
-import {Service} from "../../src/entity/service.entity";
-import {
-    ServiceDetailResponseDto,
-    ServiceResponseDto, ServiceVersionResponseDto,
-    ServiceWithVersionCountResponseDto, VersionResponseDto
-} from "../../src/dto/response.dto";
+import { Service } from "../../src/entity/service.entity";
+import { ServiceWithVersionCountResponseDto } from "../../src/dto/response.dto";
 
 export class TestUtil {
     static createMockService(name: string, createAt: Date = new Date()): Service {
@@ -17,7 +13,7 @@ export class TestUtil {
 
     static generateUUIDString = () => {
         return crypto.randomUUID();
-    }
+    };
 
     static createMockServiceWithVersionCountResponse(): ServiceWithVersionCountResponseDto {
         return {
@@ -48,6 +44,6 @@ export class TestUtil {
             name:TestUtil.generateUUIDString(),
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
-        }
+        };
     }
 }

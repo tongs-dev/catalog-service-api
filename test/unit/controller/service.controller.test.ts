@@ -9,7 +9,7 @@ import {
 import { ServiceController } from "../../../src/controller/service.controller";
 import {TestUtil} from "../../util/util";
 
-describe("ServiceController (e2e)", () => {
+describe("ServiceController (Unit Test)", () => {
     let app: INestApplication;
     let serviceDao: ServiceDao;
 
@@ -108,7 +108,7 @@ describe("ServiceController (e2e)", () => {
 
     describe("GET /services/:id", () => {
         it("should return service with versions in detail", async () => {
-            const expectedResponse = TestUtil.createMockServiceDetailResponse()
+            const expectedResponse = TestUtil.createMockServiceDetailResponse();
             mockServiceDao.getServiceDetail.mockResolvedValue(expectedResponse);
 
             const response = await request(app.getHttpServer())

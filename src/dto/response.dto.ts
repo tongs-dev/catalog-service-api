@@ -27,5 +27,5 @@ export class ServiceResponseDto {
 }
 
 export class ServiceDetailResponseDto extends ServiceResponseDto {
-    versions: ServiceVersionResponseDto[]
+    versions: ServiceVersionResponseDto[];
 }
