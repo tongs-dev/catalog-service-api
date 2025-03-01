@@ -8,6 +8,6 @@ module.exports = {
     synchronize: false,
     logging: false,
     entities: ["src/entity/**/*.ts"],
-    migrations: ["src/migration/**/*.ts"],
+    migrations: process.env.MIGRATION_PATH ? [process.env.MIGRATION_PATH] : ["dist/migration/**/*.js"],
     subscribers: ["src/subscriber/**/*.ts"]
 };

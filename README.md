@@ -122,6 +122,12 @@ npm run lint    // runs only ESLint
 9. npm run test
 
 
+
+
+    // TODO: add dev mock data
+    // TODO: dockerfile
+
+
 TODO: create ./build-dev.sh
 
 

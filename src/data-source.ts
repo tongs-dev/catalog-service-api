@@ -22,7 +22,7 @@ const options: DataSourceOptions = {
     migrationsRun: true,
     entities: [Service, Version],
     dropSchema: process.env.NODE_ENV === "test", // Drop schema only in tests
-    migrations: ["dist/migration/**/*.js"],
+    migrations: process.env.MIGRATION_PATH ? [process.env.MIGRATION_PATH] : ["dist/migration/**/*.js"],
 };
 
 export const dataSource = new DataSource(options);

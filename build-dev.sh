@@ -25,6 +25,7 @@ export DB_PORT=5432
 export DB_USER=test_user
 export DB_PASS=password
 export DB_NAME=postgres
+MIGRATION_PATH=dist/migration/**/*.js
 
 # Install dependencies
 npm install
