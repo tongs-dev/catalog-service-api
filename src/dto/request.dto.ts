@@ -2,6 +2,7 @@ import { Length, IsEnum, IsInt, IsOptional,IsString, IsUUID, Max, MaxLength, Min
 import { Transform, Type } from "class-transformer";
 
 import { Service } from "../entity/service.entity";
+import {Optional} from "@nestjs/common";
 
 export class ServicesWithVersionCountRequestDto {
     @IsOptional()
@@ -33,7 +34,7 @@ export class ServicesWithVersionCountRequestDto {
 }
 
 export class ServiceWithVersionsRequestDto {
-    @IsUUID("4", { message: "invalid ID format. Must be a UUID v4." })
+    @IsUUID("4", { message: "invalid ID format, must be a UUID v4" })
     id: string;
 }
 
@@ -48,7 +49,7 @@ export class CreateServiceRequestDto {
 }
 
 export class ServiceRequestPathParamDto {
-    @IsUUID("4", { message: "invalid UUID format" })
+    @IsUUID("4", { message: "invalid ID format, must be a UUID v4" })
     id: string;
 }
 
@@ -64,3 +65,23 @@ export class UpdateServiceRequestDto {
     description?: string;
 }
 
+export class CreateVersionRequestDto {
+    @IsUUID("4", { message: "invalid ID format, must be a UUID v4" })
+    serviceId: string;
+
+    @IsString()
+    @Length(1, 255, { message: "version name must be between 1 and 255 characters" })
+    name: string;
+}
+
+export class UpdateVersionRequestDto {
+    @IsOptional()
+    @IsString()
+    @Length(1, 255, { message: "version name must be between 1 and 255 characters" })
+    name?: string;
+}
+
+export class VersionRequestPathParamDto {
+    @IsUUID("4", { message: "invalid ID format, must be a UUID v4" })
+    id: string;
+}

@@ -18,7 +18,7 @@ export class VersionDao {
             const newVersion = this.versionRepository.create({ service: { id: serviceId }, name });
             const result = await this.versionRepository.save(newVersion);
 
-            return result ? ResponseDtoTransformer.toVersionDto(result) : null;
+            return ResponseDtoTransformer.toVersionDto(result);
         } catch (err) {
             if (err instanceof QueryFailedError && err.message.includes("idx_version_name_service")) {
                 console.log("Duplicate version detected:", serviceId, name, err.message);

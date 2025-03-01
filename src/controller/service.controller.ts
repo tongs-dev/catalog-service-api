@@ -80,7 +80,7 @@ export class ServiceController {
         try {
             return this.serviceDao.createService(newService);
         } catch (error) {
-            throw new InternalServerErrorException("Internal server error");
+            throw new InternalServerErrorException("Internal server error", error);
         }
     }
 
@@ -103,7 +103,7 @@ export class ServiceController {
                 throw error;
             }
 
-            throw new InternalServerErrorException("Internal server error");
+            throw new InternalServerErrorException("Internal server error", error);
         }
     }
 
@@ -122,7 +122,7 @@ export class ServiceController {
                 throw error;
             }
 
-            throw new InternalServerErrorException("Internal server error");
+            throw new InternalServerErrorException("Internal server error", error);
         }
     }
 }

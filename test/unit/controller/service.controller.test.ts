@@ -172,7 +172,7 @@ describe("ServiceController (Unit Test)", () => {
             // Then
             expect(response.body).toEqual({
                 statusCode: 400,
-                message: ["invalid ID format. Must be a UUID v4."],
+                message: ["invalid ID format, must be a UUID v4"],
                 error: "Bad Request",
             });
             expect(serviceDao.getServiceWithVersions).not.toHaveBeenCalled();
@@ -348,7 +348,7 @@ describe("ServiceController (Unit Test)", () => {
             // Then
             expect(response.body).toEqual({
                 statusCode: 400,
-                message: ["invalid UUID format"],
+                message: ["invalid ID format, must be a UUID v4"],
                 error: "Bad Request",
             });
             expect(serviceDao.updateService).not.toHaveBeenCalled();
@@ -414,7 +414,6 @@ describe("ServiceController (Unit Test)", () => {
             // Then
             expect(response.body).toEqual({
                 statusCode: 500,
-                error: "Internal Server Error",
                 message: "Internal server error",
             });
             expect(serviceDao.updateService).toHaveBeenCalledTimes(1);
@@ -469,7 +468,7 @@ describe("ServiceController (Unit Test)", () => {
             // Then
             expect(response.body).toEqual({
                 statusCode: 400,
-                message: ["invalid UUID format"],
+                message: ["invalid ID format, must be a UUID v4"],
                 error: "Bad Request",
             });
             expect(serviceDao.deleteService).not.toHaveBeenCalled();
@@ -487,7 +486,6 @@ describe("ServiceController (Unit Test)", () => {
             // Then
             expect(response.body).toEqual({
                 statusCode: 500,
-                error: "Internal Server Error",
                 message: "Internal server error",
             });
             expect(serviceDao.deleteService).toHaveBeenCalledTimes(1);

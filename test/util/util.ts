@@ -1,5 +1,5 @@
 import { Service } from "../../src/entity/service.entity";
-import { ServiceWithVersionCountResponseDto } from "../../src/dto/response.dto";
+import {ServiceWithVersionCountResponseDto, VersionResponseDto} from "../../src/dto/response.dto";
 
 /**
  * Helper methods used to mock request / response objects.
@@ -35,16 +35,23 @@ export class TestUtil {
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
             versions: [
-                TestUtil.createMockVersionResponse(),
-                TestUtil.createMockVersionResponse(),
+                TestUtil.createMockServiceVersionResponse(),
+                TestUtil.createMockServiceVersionResponse(),
             ],
         };
     }
 
-    static createMockVersionResponse() {
+    static createMockVersionResponse(serviceId: string, name: string) {
+        return {
+            ...TestUtil.createMockServiceVersionResponse(name),
+            serviceId,
+        };
+    }
+
+    private static createMockServiceVersionResponse(name ?: string) {
         return {
             id: TestUtil.generateUUIDString(),
-            name:TestUtil.generateUUIDString(),
+            name:name ?? TestUtil.generateUUIDString(),
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
         };

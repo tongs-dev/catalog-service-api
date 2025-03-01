@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
-import { Service } from "../entity/service.entity";
-import { ServiceDao } from "../dao/service.dao";
 import { ServiceController } from "../controller/service.controller";
+import { ServiceDao } from "../dao/service.dao";
+import { Service } from "../entity/service.entity";
 
 @Module({
     imports: [TypeOrmModule.forFeature([Service])],

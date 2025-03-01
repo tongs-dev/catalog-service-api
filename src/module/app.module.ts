@@ -1,8 +1,9 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
-import { Service } from "../entity/service.entity";
 import { Version } from "../entity/version.entity";
+import { Service } from "../entity/service.entity";
+import { VersionModule } from "./version.module";
 import { ServiceModule } from "./service.module";
 
 @Module({
@@ -19,6 +20,7 @@ import { ServiceModule } from "./service.module";
             autoLoadEntities: true,
         }),
         ServiceModule,
+        VersionModule,
     ],
 })
 export class AppModule {}
