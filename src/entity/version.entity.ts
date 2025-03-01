@@ -1,12 +1,12 @@
 import {
-    Entity,
-    PrimaryGeneratedColumn,
     Column,
-    ManyToOne,
     CreateDateColumn,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    PrimaryGeneratedColumn,
     UpdateDateColumn,
     Unique,
-    JoinColumn
 } from "typeorm";
 
 import { Service } from "./service.entity";

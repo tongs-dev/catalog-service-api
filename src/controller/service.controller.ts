@@ -1,21 +1,33 @@
 import {
-    Controller,
-    Get,
-    Post,
-    Put,
-    Delete,
-    Param,
-    Query,
     Body,
+    Controller,
+    Delete,
+    Get,
+    HttpCode,
+    HttpException,
+    InternalServerErrorException,
+    Param,
+    Patch,
+    Post,
+    Query,
     UsePipes,
     ValidationPipe,
-    InternalServerErrorException, NotFoundException, HttpException
+    NotFoundException,
 } from "@nestjs/common";
 
-
 import { ServiceDao } from "../dao/service.dao";
-import {ServicesWithVersionCountRequestDto, ServiceWithVersionsRequestDto} from "../dto/request.dto";
-import { ServiceWithVersionCountResponseDto, ServiceWithVersionsResponseDto } from "../dto/response.dto";
+import {
+    CreateServiceRequestDto,
+    ServiceRequestPathParamDto,
+    ServicesWithVersionCountRequestDto,
+    ServiceWithVersionsRequestDto,
+    UpdateServiceRequestDto
+} from "../dto/request.dto";
+import {
+    ServiceResponseDto,
+    ServiceWithVersionCountResponseDto,
+    ServiceWithVersionsResponseDto
+} from "../dto/response.dto";
 
 @Controller("services")
 export class ServiceController {
@@ -62,21 +74,55 @@ export class ServiceController {
         }
     }
 
-    // @Post()
-    // async createService(@Body() newService: Partial<Service>): Promise<ResponseDto> {
-    //     return this.serviceDao.createService(newService);
-    // }
-    //
-    // @Put(":id")
-    // async updateService(
-    //     @Param("id") id: string,
-    //     @Body() updateData: Partial<Service>
-    // ): Promise<ResponseDto> {
-    //     return this.serviceDao.updateService(id, updateData);
-    // }
-    //
-    // @Delete(":id")
-    // async deleteService(@Param("id") id: string): Promise<boolean> {
-    //     return this.serviceDao.deleteService(id);
-    // }
+    @Post()
+    @UsePipes(new ValidationPipe({ whitelist: true, transform: true, forbidNonWhitelisted: true }))
+    async createService(@Body() newService: CreateServiceRequestDto): Promise<ServiceResponseDto> {
+        try {
+            return this.serviceDao.createService(newService);
+        } catch (error) {
+            throw new InternalServerErrorException("Internal server error");
+        }
+    }
+
+    @Patch(":id")
+    @UsePipes(new ValidationPipe({ whitelist: true, transform: true, forbidNonWhitelisted: true }))
+    async updateService(
+        @Param() params: ServiceRequestPathParamDto,
+        @Body() updateData: UpdateServiceRequestDto
+    ): Promise<ServiceResponseDto> {
+        try {
+            const service = await this.serviceDao.updateService(params.id, updateData);
+
+            if (!service) {
+                throw new NotFoundException(`Service with ID ${params.id} not found`);
+            }
+
+            return service;
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            }
+
+            throw new InternalServerErrorException("Internal server error");
+        }
+    }
+
+    @Delete(":id")
+    @HttpCode(204)
+    @UsePipes(new ValidationPipe({ whitelist: true, transform: true, forbidNonWhitelisted: true }))
+    async deleteService(@Param() params: ServiceRequestPathParamDto): Promise<void> {
+        try {
+            const result = await this.serviceDao.deleteService(params.id);
+
+            if (!result) {
+                throw new NotFoundException(`Service with ID ${params.id} not found`);
+            }
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            }
+
+            throw new InternalServerErrorException("Internal server error");
+        }
+    }
 }

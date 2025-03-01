@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
-import { ServiceModule } from "./module/service.module";
-import { Service } from "./entity/service.entity";
-import { Version } from "./entity/version.entity";
+import { Service } from "../entity/service.entity";
+import { Version } from "../entity/version.entity";
+import { ServiceModule } from "./service.module";
 
 @Module({
     imports: [

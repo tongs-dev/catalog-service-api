@@ -1,7 +1,14 @@
 import { Service } from "../../src/entity/service.entity";
 import { ServiceWithVersionCountResponseDto } from "../../src/dto/response.dto";
 
+/**
+ * Helper methods used to mock request / response objects.
+ */
 export class TestUtil {
+    static generateUUIDString = () => {
+        return crypto.randomUUID();
+    };
+
     static createMockService(name: string, createAt: Date = new Date()): Service {
         return {
             id: TestUtil.generateUUIDString(),
@@ -10,10 +17,6 @@ export class TestUtil {
             created_at: createAt,
         } as Service;
     }
-
-    static generateUUIDString = () => {
-        return crypto.randomUUID();
-    };
 
     static createMockServiceWithVersionCountResponse(): ServiceWithVersionCountResponseDto {
         return {

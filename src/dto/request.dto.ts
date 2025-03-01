@@ -1,5 +1,5 @@
-import {IsInt, IsOptional, IsEnum, Min, Max, IsString, Length, IsUUID} from "class-validator";
-import {Transform, Type} from "class-transformer";
+import { Length, IsEnum, IsInt, IsOptional,IsString, IsUUID, Max, MaxLength, Min } from "class-validator";
+import { Transform, Type } from "class-transformer";
 
 import { Service } from "../entity/service.entity";
 
@@ -36,3 +36,31 @@ export class ServiceWithVersionsRequestDto {
     @IsUUID("4", { message: "invalid ID format. Must be a UUID v4." })
     id: string;
 }
+
+export class CreateServiceRequestDto {
+    @IsString()
+    @Length(3, 255, { message: "name must be between 3 and 255 characters" })
+    name: string;
+
+    @IsString()
+    @MaxLength(500, { message: "description must be at most 500 characters" })
+    description: string;
+}
+
+export class ServiceRequestPathParamDto {
+    @IsUUID("4", { message: "invalid UUID format" })
+    id: string;
+}
+
+export class UpdateServiceRequestDto {
+    @IsOptional()
+    @IsString()
+    @Length(3, 255, { message: "name must be between 3 and 255 characters" })
+    name?: string;
+
+    @IsOptional()
+    @IsString()
+    @MaxLength(500, { message: "description must be at most 500 characters" })
+    description?: string;
+}
+
