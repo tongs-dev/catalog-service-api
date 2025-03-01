@@ -1,11 +1,11 @@
 import {Service} from "../entity/service.entity";
+import {Version} from "../entity/version.entity";
 import {
     ServiceDetailResponseDto, ServiceResponseDto,
     ServiceVersionResponseDto,
     ServiceWithVersionCountResponseDto,
     VersionResponseDto
 } from "./service-response.dto";
-import {Version} from "../entity/version.entity";
 
 export class DtoTransformer {
     static toServiceWithVersionCountDto(service: Service, count: number): ServiceWithVersionCountResponseDto {

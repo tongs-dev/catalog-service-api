@@ -1,12 +1,12 @@
 import "reflect-metadata";
 import dotenv from "dotenv";
 import { DataSource, DataSourceOptions } from "typeorm";
+
 import { Service } from "./entity/service.entity";
 import { Version } from "./entity/version.entity";
 
 // Load .env.test for test env
 if (process.env.NODE_ENV === "test") {
-    console.log("!!!!!!!!!!");
     dotenv.config({ path: ".env.test" });
 }
 

@@ -8,6 +8,7 @@ import {
     Unique,
     JoinColumn
 } from "typeorm";
+
 import { Service } from "./service.entity";
 
 @Entity()

@@ -1,9 +1,10 @@
 import { DataSource } from "typeorm";
+
 import { ServiceDao } from "../../src/dao/service.dao";
-import { TestUtil } from "../util/util";
-import { DtoTransformer } from "../../src/dto/dto-transformer";
 import { VersionDao } from "../../src/dao/version.dao";
+import { DtoTransformer } from "../../src/dto/dto-transformer";
 import { setupTestDB, teardownTestDB } from "../util/setupTestDB";
+import { TestUtil } from "../util/util";
 
 describe("serviceDao (Integration Test)", () => {
     const mockServiceA = TestUtil.createMockService("Service A", new Date());

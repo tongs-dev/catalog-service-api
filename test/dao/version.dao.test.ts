@@ -1,8 +1,9 @@
 import { DataSource } from "typeorm";
+
 import { ServiceDao } from "../../src/dao/service.dao";
-import { TestUtil } from "../util/util";
 import { VersionDao } from "../../src/dao/version.dao";
 import { setupTestDB, teardownTestDB } from "../util/setupTestDB";
+import { TestUtil } from "../util/util";
 
 describe("VersionDAO (Integration Test)", () => {
     const mockService = TestUtil.createMockService(TestUtil.generateUUIDString(), new Date());
