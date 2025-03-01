@@ -1,21 +1,19 @@
 import "reflect-metadata";
-
-import { dataSource } from "./data-source";
+import {ValidationPipe} from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
-import { AppModule } from "./module/app.module";
+
+import { AppModule } from "./app.module";
 
 async function bootstrap() {
-    // Initialize data source
-    try {
-        await dataSource.initialize();
-        console.log("Data source successfully initialized.");
-    } catch (err) {
-        console.log("Error: ", err);
-    }
-
-    // Create and start server
     const app = await NestFactory.create(AppModule);
+
+    app.enableCors(); // Allow cross-origin requests
+    app.setGlobalPrefix("api"); // All routes will be prefixed with `/api`
+    // Enable validation globally
+    app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+
     await app.listen(3000);
+    console.log("🚀 Server running on http://localhost:3000");
 }
 
 bootstrap();

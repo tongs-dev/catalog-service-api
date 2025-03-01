@@ -3,8 +3,8 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 
 import { Version } from "../entity/version.entity";
-import { VersionResponseDto } from "../dto/service-response.dto";
-import { DtoTransformer } from "../dto/dto-transformer";
+import { VersionResponseDto } from "../dto/response.dto";
+import { ResponseDtoTransformer } from "../dto/response-dto-transformer";
 
 @Injectable()
 export class VersionDao {
@@ -18,7 +18,7 @@ export class VersionDao {
             const newVersion = this.versionRepository.create({ service: { id: serviceId }, name });
             const result = await this.versionRepository.save(newVersion);
 
-            return result ? DtoTransformer.toVersionDto(result) : null;
+            return result ? ResponseDtoTransformer.toVersionDto(result) : null;
         } catch (err) {
             if (err instanceof QueryFailedError && err.message.includes("idx_version_name_service")) {
                 console.log("Duplicate version detected:", serviceId, name, err.message);
@@ -31,7 +31,7 @@ export class VersionDao {
     async getVersionById(id: string): Promise<VersionResponseDto> {
         const result = await this.versionRepository.findOne({ where: { id }, relations: ["service"] });
 
-        return result ? DtoTransformer.toVersionDto(result) : null;
+        return result ? ResponseDtoTransformer.toVersionDto(result) : null;
     }
 
     async updateVersion(id: string, name: string): Promise<VersionResponseDto> {
@@ -42,7 +42,7 @@ export class VersionDao {
 
         const result = await this.versionRepository.findOne({ where: { id }, relations: ["service"] });
 
-        return result ? DtoTransformer.toVersionDto(result) : null;
+        return result ? ResponseDtoTransformer.toVersionDto(result) : null;
     }
 
     async deleteVersion(id: string): Promise<boolean> {

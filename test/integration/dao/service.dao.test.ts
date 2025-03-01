@@ -1,10 +1,10 @@
 import { DataSource } from "typeorm";
 
-import { ServiceDao } from "../../src/dao/service.dao";
-import { VersionDao } from "../../src/dao/version.dao";
-import { DtoTransformer } from "../../src/dto/dto-transformer";
-import { setupTestDB, teardownTestDB } from "../util/setupTestDB";
-import { TestUtil } from "../util/util";
+import { ServiceDao } from "../../../src/dao/service.dao";
+import { VersionDao } from "../../../src/dao/version.dao";
+import { ResponseDtoTransformer } from "../../../src/dto/response-dto-transformer";
+import { setupTestDB, teardownTestDB } from "../../util/setupTestDB";
+import { TestUtil } from "../../util/util";
 
 describe("serviceDao (Integration Test)", () => {
     const mockServiceA = TestUtil.createMockService("Service A", new Date());
@@ -46,8 +46,8 @@ describe("serviceDao (Integration Test)", () => {
 
             // order matters
             const expected = [
-                DtoTransformer.toServiceWithVersionCountDto(mockServiceB, 1),
-                DtoTransformer.toServiceWithVersionCountDto(mockServiceA, 2),
+                ResponseDtoTransformer.toServiceWithVersionCountDto(mockServiceB, 1),
+                ResponseDtoTransformer.toServiceWithVersionCountDto(mockServiceA, 2),
             ];
             expect(result).toEqual(expected);
         });
@@ -62,7 +62,7 @@ describe("serviceDao (Integration Test)", () => {
             const result = await serviceDao.getAllServicesWithVersionCount(1, 1);
 
             expect(result).toHaveLength(1);
-            expect(result[0]).toEqual(DtoTransformer.toServiceWithVersionCountDto(mockServiceB, 1));
+            expect(result[0]).toEqual(ResponseDtoTransformer.toServiceWithVersionCountDto(mockServiceB, 1));
         });
 
         it("given sort by and order by -> should return services in sorted order", async () => {
@@ -72,8 +72,8 @@ describe("serviceDao (Integration Test)", () => {
 
             // order matters
             const expected = [
-                DtoTransformer.toServiceWithVersionCountDto(mockServiceA, 2),
-                DtoTransformer.toServiceWithVersionCountDto(mockServiceB, 1),
+                ResponseDtoTransformer.toServiceWithVersionCountDto(mockServiceA, 2),
+                ResponseDtoTransformer.toServiceWithVersionCountDto(mockServiceB, 1),
             ];
             expect(result).toEqual(expected);
         });
@@ -91,8 +91,8 @@ describe("serviceDao (Integration Test)", () => {
 
             const result = await serviceDao.getAllServicesWithVersionCount(1, 10, "A");
             expect(result).toHaveLength(2);
-            expect(result[0]).toEqual(DtoTransformer.toServiceWithVersionCountDto(mockSameNameService, 0));
-            expect(result[1]).toEqual(DtoTransformer.toServiceWithVersionCountDto(mockServiceA, 2));
+            expect(result[0]).toEqual(ResponseDtoTransformer.toServiceWithVersionCountDto(mockSameNameService, 0));
+            expect(result[1]).toEqual(ResponseDtoTransformer.toServiceWithVersionCountDto(mockServiceA, 2));
         });
     });
 

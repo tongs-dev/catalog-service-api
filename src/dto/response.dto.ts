@@ -1,3 +1,5 @@
+import {Transform} from "class-transformer";
+
 export class ServiceWithVersionCountResponseDto {
     id: string;
     name: string;

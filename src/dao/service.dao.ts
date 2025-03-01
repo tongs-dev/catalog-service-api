@@ -6,8 +6,8 @@ import {
     ServiceDetailResponseDto,
     ServiceResponseDto,
     ServiceWithVersionCountResponseDto
-} from "../dto/service-response.dto";
-import { DtoTransformer } from "../dto/dto-transformer";
+} from "../dto/response.dto";
+import { ResponseDtoTransformer } from "../dto/response-dto-transformer";
 import { Service } from "../entity/service.entity";
 
 @Injectable()
@@ -50,7 +50,7 @@ export class ServiceDao {
         const results = await this.serviceRepository.query(sql, params);
 
         return results.map((row: any) =>
-            DtoTransformer.toServiceWithVersionCountDto(row, Number(row.version_count))
+            ResponseDtoTransformer.toServiceWithVersionCountDto(row, Number(row.version_count))
         );
     }
 
@@ -60,7 +60,7 @@ export class ServiceDao {
             relations: ["versions"],
         });
 
-        return result ? DtoTransformer.toServiceDetailDto(result) : null;
+        return result ? ResponseDtoTransformer.toServiceDetailDto(result) : null;
     }
 
     async getServiceById(id: string): Promise<ServiceResponseDto> {
@@ -68,7 +68,7 @@ export class ServiceDao {
             where: { id },
         });
 
-        return result ? DtoTransformer.toServiceDto(result) : null;
+        return result ? ResponseDtoTransformer.toServiceDto(result) : null;
     }
 
     async createService(newService: Partial<Service>): Promise<ServiceResponseDto> {
@@ -76,7 +76,7 @@ export class ServiceDao {
 
         const result = await this.serviceRepository.save(service);
 
-        return DtoTransformer.toServiceDto(result);
+        return ResponseDtoTransformer.toServiceDto(result);
     }
 
     async updateService(id: string, updateData: Partial<Service>): Promise<ServiceResponseDto> {
@@ -84,7 +84,7 @@ export class ServiceDao {
 
         const result = await  this.serviceRepository.findOne({ where: { id } });
 
-        return result ? DtoTransformer.toServiceDto(result) : null;
+        return result ? ResponseDtoTransformer.toServiceDto(result) : null;
     }
 
     async deleteService(id: string): Promise<boolean> {
