@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:15.0
+    container_name: postgres
+    environment:
+      POSTGRES_USER: dba
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/tmp/postgres/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 30s
+      retries: 5
+
+volumes:
+  postgres_data:
