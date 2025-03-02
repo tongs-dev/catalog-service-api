@@ -5,9 +5,10 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Version } from "../entity/version.entity";
 import { VersionResponseDto } from "../dto/response.dto";
 import { ResponseDtoTransformer } from "../dto/response-dto-transformer";
-import {Service} from "../entity/service.entity";
-import {version} from "ts-jest/dist/transformers/hoist-jest";
 
+/**
+ * Data Access Object (DAO) for managing Version entity interactions with the database.
+ */
 @Injectable()
 export class VersionDao {
     constructor(
@@ -15,6 +16,12 @@ export class VersionDao {
         private readonly versionRepository: Repository<Version>,
     ) {}
 
+    /**
+     * Creates a new version.
+     *
+     * @param newVersion - The version details.
+     * @returns The created version or null if a duplicate version is detected.
+     */
     async createVersion(newVersion: Partial<Version>): Promise<VersionResponseDto> {
         try {
             const version = this.versionRepository.create(newVersion);
@@ -31,12 +38,25 @@ export class VersionDao {
         }
     }
 
+    /**
+     * Retrieves a version by its ID.
+     *
+     * @param id - The ID of the version.
+     * @returns The version details or null if the version does not exist.
+     */
     async getVersionById(id: string): Promise<VersionResponseDto> {
         const result = await this.versionRepository.findOne({ where: { id }, relations: ["service"] });
 
         return result ? ResponseDtoTransformer.toVersionDto(result) : null;
     }
 
+    /**
+     * Updates an existing version.
+     *
+     * @param id - The ID of the version to update.
+     * @param updateData - The updated version details.
+     * @returns The updated version or null if the version does not exist.
+     */
     async updateVersion(id: string, updateData: Partial<Version>): Promise<VersionResponseDto> {
         await this.versionRepository.update(id, updateData);
 
@@ -45,6 +65,12 @@ export class VersionDao {
         return result ? ResponseDtoTransformer.toVersionDto(result) : null;
     }
 
+    /**
+     * Deletes a version.
+     *
+     * @param id - The ID of the version to delete.
+     * @returns True if deletion was successful, otherwise false.
+     */
     async deleteVersion(id: string): Promise<boolean> {
         const result = await this.versionRepository.delete(id);
 

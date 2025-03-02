@@ -131,8 +131,6 @@ describe("VersionController (Unit Test)", () => {
     });
 
     describe("GET /versions/:id", () => {
-
-
         it("should retrieve a version and return 200", async () => {
             // Given
             const versionId = TestUtil.generateUUIDString();

@@ -5,7 +5,7 @@ import { INestApplication } from "@nestjs/common";
 import { UpdateServiceRequestDto } from "../../../src/dto/request.dto";
 import {TestUtil} from "../../util/util";
 
-describe("ServiceController (Unit Test)", () => {
+describe("App Controller (Unit Test)", () => {
     let app: INestApplication;
 
     beforeAll(async () => {

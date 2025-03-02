@@ -6,7 +6,7 @@ import { ResponseDtoTransformer } from "../../../src/dto/response-dto-transforme
 import { cleanTables, setupTestDB, teardownTestDB } from "../../util/setupTestDB";
 import { TestUtil } from "../../util/util";
 
-describe("serviceDao (Integration Test)", () => {
+describe("ServiceDao (Integration Test)", () => {
     const mockServiceA = TestUtil.createMockService("Service A", new Date());
     const mockServiceB = TestUtil.createMockService("Service B",
         new Date(mockServiceA.created_at.getTime() + 1000)

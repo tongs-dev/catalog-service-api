@@ -2,6 +2,9 @@ import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Up
 
 import { Version } from "./version.entity";
 
+/**
+ * Service data entity.
+ */
 @Entity()
 export class Service {
     @PrimaryGeneratedColumn('uuid')

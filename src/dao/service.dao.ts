@@ -10,14 +10,27 @@ import {
 import { ResponseDtoTransformer } from "../dto/response-dto-transformer";
 import { Service } from "../entity/service.entity";
 
+/**
+ * Data Access Object (DAO) for managing Service entity interactions with the database.
+ */
 @Injectable()
 export class ServiceDao {
-
     constructor(
         @InjectRepository(Service)
         private readonly serviceRepository: Repository<Service>,
     ) {}
 
+    /**
+     * Retrieves a paginated list of services with the count of associated versions.
+     *
+     * @param page - The page number for pagination.
+     * @param limit - The number of results per page.
+     * @param name - (Optional) Filter services by name (case-insensitive).
+     * @param sortBy - The field to sort results by (default: created_at).
+     * @param order - The sorting order (ASC or DESC, default: DESC).
+     *
+     * @returns A list of services with their version count.
+     */
     async getServicesWithVersionCount(
         page: number,
         limit: number,
@@ -44,7 +57,6 @@ export class ServiceDao {
             LIMIT $1 OFFSET $2;
         `;
         const offset = (page - 1) * limit;
-
         const params = name ? [limit, offset, `%${name}%`] : [limit, offset];
 
         const results = await this.serviceRepository.query(sql, params);
@@ -54,6 +66,12 @@ export class ServiceDao {
         );
     }
 
+    /**
+     * Retrieves a service along with its associated versions.
+     *
+     * @param id  The ID of the service.
+     * @returns The service with its associated versions or null if the service does not exist.
+     */
     async getServiceWithVersions(id: string): Promise<ServiceWithVersionsResponseDto> {
         const result = await this.serviceRepository.findOne({
             where: { id },
@@ -63,6 +81,12 @@ export class ServiceDao {
         return result ? ResponseDtoTransformer.toServiceDetailDto(result) : null;
     }
 
+    /**
+     * Retrieves a service by its ID.
+     *
+     * @param id - The ID of the service.
+     * @returns The service details or null if the service does not exist.
+     */
     async getServiceById(id: string): Promise<ServiceResponseDto> {
         const result = await this.serviceRepository.findOne({
             where: { id },
@@ -71,6 +95,12 @@ export class ServiceDao {
         return result ? ResponseDtoTransformer.toServiceDto(result) : null;
     }
 
+    /**
+     * Creates a new service.
+     *
+     * @param newService - The service details.
+     * @returns The created service.
+     */
     async createService(newService: Partial<Service>): Promise<ServiceResponseDto> {
         const service = this.serviceRepository.create(newService);
 
@@ -79,14 +109,27 @@ export class ServiceDao {
         return ResponseDtoTransformer.toServiceDto(result);
     }
 
+    /**
+     * Updates an existing service.
+     *
+     * @param id - The ID of the service to update.
+     * @param updateData - The updated service details.
+     * @returns The updated service or null if the service does not exist.
+     */
     async updateService(id: string, updateData: Partial<Service>): Promise<ServiceResponseDto> {
         await this.serviceRepository.update(id, updateData);
 
-        const result = await  this.serviceRepository.findOne({ where: { id } });
+        const result = await this.serviceRepository.findOne({ where: { id } });
 
         return result ? ResponseDtoTransformer.toServiceDto(result) : null;
     }
 
+    /**
+     * Deletes a service.
+     *
+     * @param id - The ID of the service to delete.
+     * @returns True if deletion was successful, otherwise false.
+     */
     async deleteService(id: string): Promise<boolean> {
         const result = await this.serviceRepository.delete(id);
 

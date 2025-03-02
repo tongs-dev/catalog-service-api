@@ -5,8 +5,8 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { ServiceDao } from "../../src/dao/service.dao";
 import { VersionDao } from "../../src/dao/version.dao";
 import { dataSource } from "../../src/data-source";
-import {Service} from "../../src/entity/service.entity";
-import {Version} from "../../src/entity/version.entity";
+import { Service } from "../../src/entity/service.entity";
+import { Version } from "../../src/entity/version.entity";
 
 export interface TestDBSetup {
     db: DataSource;

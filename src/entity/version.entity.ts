@@ -11,6 +11,9 @@ import {
 
 import { Service } from "./service.entity";
 
+/**
+ * Version data entity.
+ */
 @Entity()
 @Unique(['name', 'service']) // Enforces uniqueness on (name, service_id)
 export class Version {

@@ -1,7 +1,6 @@
 import { Service } from "../../src/entity/service.entity";
 import { Version } from "../../src/entity/version.entity";
-import {ServiceWithVersionCountResponseDto, VersionResponseDto} from "../../src/dto/response.dto";
-import {VersionDao} from "../../src/dao/version.dao";
+import { ServiceWithVersionCountResponseDto } from "../../src/dto/response.dto";
 
 /**
  * Helper methods used to mock request / response objects.
