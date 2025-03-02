@@ -9,13 +9,19 @@ TypeScript (`.ts`) files live in the `src` folder and after compilation are outp
 The full folder structure of this app is explained below:
 
 ```json
-├── src   
+├── src
+│   ├── auth                      # Logic for handling authentication/authorization on secure API
+│   │   ├──controller             # Auth controller for handling authentication-related operations
+│   │   ├──entity                 # TypeORM Entity representing user table
+│   │   ├──module                 # NestJS module for feature separation
+│   │   ├──service                # NestJS service for handling auth logic
 │   ├── controller                # Controllers for handling API requests
 │   ├── dao                       # Data Access Objects for database operations
 │   ├── dto                       # Data Transfer Objects (DTOs) for validation
 │   ├── entity                    # TypeORM Entities representing database tables
 │   ├── migration                 # TypeORM migrations for database schema changes
-│   │   ├── dev                   # Local development-specific migrations
+│   │   ├── auth                  # Auth specific migrations
+│   │   ├── dev                   # Local development specific migrations
 │   ├── module                    # NestJS modules for feature separation
 │   ├── app.ts                    # Main application entry point
 │   ├── data-source.ts            # Database connection configuration
@@ -37,9 +43,9 @@ The full folder structure of this app is explained below:
 
 ##  Pre-reqs
 To build and run this app locally you will need a few things:
-- Node.js (>= 16.x)
-- PostgreSQL (>= 13.x)
-- Docker (optional, for containerized setup)
+- Node.js (v20)
+- PostgreSQL (v15)
+- Docker (For containerized setup)
 
 ## Getting started
 1. Clone the repository
@@ -82,7 +88,7 @@ npm run start
 ```
 
 2. Navigate to `http://localhost:3000` and you should see the template being served and rendered locally!
-   API Endpoints
+API Endpoints
 ```
 - Service Endpoints: 
 GET /services - Retrieve all services
@@ -115,3 +121,43 @@ npm run migration:run
 ```bash
 npm run migration:revert
 ```
+
+## Integrating authentication/authorization on the API
+This project defines a secure API (http://localhost:3000/api/secure-resources) that uses JWT-based authentication to protect endpoints.
+If an unauthenticated request is made, the API will return:
+```json
+{"statusCode":401,"message":"Unauthorized"}
+```
+Below is a guide on how to request resources.
+
+1. User Registration
+Before authenticating, users must register.
+```bash
+ENCRYPTED_PWD=$(curl -s -X POST http://localhost:3000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"username": "admin", "password": "password"}' | jq -r '.password')
+
+echo "Hashed Password: $ENCRYPTED_PWD"
+```
+This creates a new user and stores the hashed password.
+
+2. Login
+Registered users can authenticate to receive a JWT token using username and password.
+```bash
+ACCESS_TOKEN=$(curl -s -X POST http://localhost:3000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": "admin", "password": "$(ENCRYPTED_PWD)"}' | jq -r '.access_token')
+
+echo "Token: $ACCESS_TOKEN"
+```
+Now, `$ACCESS_TOKEN` contains the JWT token.
+
+3. Use the Token in Requests
+```bash
+curl -X GET http://localhost:3000/api/secure-resources \
+  -H "Authorization: Bearer $ACCESS_TOKEN"
+```
+This sends the token as a Bearer Token in the request.
+
+### Auth Code structure
+All authentication logic is located in the `/src/auth` folder, ensuring separation from other business logic.

@@ -3,13 +3,10 @@ import { MigrationInterface, QueryRunner } from "typeorm";
 export class CreateTables1740797178687 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        // Enable UUID extension (if not already enabled)
-        await queryRunner.query("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";");
-
         // Create service table
         await queryRunner.query(`
             CREATE TABLE service (
-                id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                 name VARCHAR(255) NOT NULL,
                 description VARCHAR(500) NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -25,7 +22,7 @@ export class CreateTables1740797178687 implements MigrationInterface {
         // Create version table
         await queryRunner.query(`
             CREATE TABLE version (
-                id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                 service_id UUID NOT NULL,
                 name VARCHAR(255) NOT NULL,
                 description VARCHAR(500) NOT NULL,
