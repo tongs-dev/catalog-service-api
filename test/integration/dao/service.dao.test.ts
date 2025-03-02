@@ -25,6 +25,7 @@ describe("ServiceDao (Integration Test)", () => {
     });
 
     beforeEach(async () => {
+        await cleanTables(db);
         await serviceDao.createService(mockServiceA);
         await versionDao.createVersion(TestUtil.createMockVersion(mockServiceA.id, "V1.0"));
         await versionDao.createVersion(TestUtil.createMockVersion(mockServiceA.id, "V2.0"));

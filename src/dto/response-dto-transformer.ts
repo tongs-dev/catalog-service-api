@@ -9,7 +9,7 @@ import {
 } from "./response.dto";
 
 /**
- * Transforms a `Service` entity into a `**ResponseDto` entity.
+ * Transforms a database entity into a response dto entity.
  */
 export class ResponseDtoTransformer {
     static toServiceWithVersionCountDto(service: Service, count: number): ServiceWithVersionCountResponseDto {

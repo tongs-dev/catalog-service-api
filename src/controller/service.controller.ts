@@ -56,7 +56,7 @@ export class ServiceController {
      * - 500 Internal Server Error - If an unexpected error occurs
      *
      * Example request:
-     *     GET /api/services?page=1&limit=10&sortBy=name&order=asc
+     *     curl -X GET http://localhost:3000/api/services?page=1&limit=10&sortBy=name&order=asc
      * Example response:
      * [
      *   {
@@ -107,7 +107,7 @@ export class ServiceController {
      *     - 500 Internal Server Error - If an unexpected error occurs
      *
      * Example request:
-     *     GET /api/services/550e8400-e29b-41d4-a716-446655440000/versions
+     *     curl -X GET http://localhost:3000/api/services/550e8400-e29b-41d4-a716-446655440000/versions
      * Example response:
      * {
      *    "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -163,19 +163,16 @@ export class ServiceController {
      * - 500 Internal Server Error - If an unexpected error occurs
      *
      * Example Request:
-     *     POST /api/services
-     *     payload:
-     *     {
-     *         "name": "New Service",
-     *         "description": "Service description"
-     *     }
+     *     curl -X POST http://localhost:3000/api/services \
+     *          -H "Content-Type: application/json" \
+     *          -d '{"name": "service name 123", "description": "service desp"}'
      * Example Response:
      * {
-     *     "id": "550e8400-e29b-41d4-a716-446655440000",
-     *     "name": "New Service",
-     *     "description": "Service description",
-     *     "createdAt": "2024-03-01T12:00:00Z",
-     *     "updatedAt": "2024-03-01T12:00:00Z"
+     *     "id":"93d4ae06-9dbe-45d0-8c05-7410853db1e7",
+     *     "name":"service name 123",
+     *     "description":"service desp",
+     *     "createdAt":"2025-03-02T02:14:10.538Z",
+     *     "updatedAt":"2025-03-02T02:14:10.538Z"
      * }
      */
     @Post()
@@ -209,19 +206,16 @@ export class ServiceController {
      *     - 500 Internal Server Error - If an unexpected error occurs
      *
      * Example Request:
-     *     PATCH /api/services/550e8400-e29b-41d4-a716-446655440000
-     *     payload:
-     *     {
-     *       "name": "New Service Name",
-     *       "description": "Updated Service description"
-     *     }
+     *     curl -X PATCH http://localhost:3000/api/services/11c6edcd-9e48-44cb-aaa7-a3c7c6e3658a \
+     *          -H "Content-Type: application/json" \
+     *          -d '{"name": "new service name"}'
      * Example Response:
      * {
-     *     "id": "550e8400-e29b-41d4-a716-446655440000",
-     *     "name": "New Service Name",
-     *     "description": "Updated Service description",
-     *     "createdAt": "2024-03-01T12:00:00Z",
-     *     "updatedAt": "2024-03-01T15:00:00Z"
+     *     "id":"11c6edcd-9e48-44cb-aaa7-a3c7c6e3658a",
+     *     "name":"new service name",
+     *     "description":"Server 3",
+     *     "createdAt":"2025-03-02T01:21:32.611Z",
+     *     "updatedAt":"2025-03-02T02:11:54.129Z"
      * }
      */
     @Patch(":id")
@@ -264,7 +258,7 @@ export class ServiceController {
      *     - 500 Internal Server Error - If an unexpected error occurs
      *
      * Example Request:
-     *     DELETE /api/services/550e8400-e29b-41d4-a716-446655440000
+     *     curl -X DELETE http://localhost:3000/api/services/550e8400-e29b-41d4-a716-446655440000
      * Example Response:
      *     204 No Content
      */

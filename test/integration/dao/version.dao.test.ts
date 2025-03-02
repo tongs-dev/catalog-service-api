@@ -22,6 +22,7 @@ describe("VersionDAO (Integration Test)", () => {
     });
 
     beforeEach(async () => {
+        await cleanTables(db);
         await serviceDao.createService(mockService);
         await versionDao.createVersion(mockVersion);
     });

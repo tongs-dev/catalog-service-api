@@ -19,6 +19,8 @@ import {
     UpdateVersionRequestDto,
     VersionRequestPathParamDto
 } from "../dto/request.dto";
+import {Service} from "../entity/service.entity";
+import {ResponseDtoTransformer} from "../dto/request-dto-transformer";
 
 /**
  * Controller for managing versions.
@@ -45,28 +47,26 @@ export class VersionController {
      * - 500 Internal Server Error - If an unexpected error occurs
      *
      * Example Request:
-     *     POST /api/versions
-     *     payload:
-     *     {
-     *         "name": "New Version",
-     *         "description": "Version description",
-     *         "serviceId": "550e8400-e29b-41d4-a716-446655440000"
-     *     }
+     *     curl -X POST http://localhost:3000/api/versions \
+     *          -H "Content-Type: application/json" \
+     *          -d '{"name": "New Version", "description": "Version description", "serviceId": "97a60546-8205-40f2-b392-8c46cdce9cb9"}'
      * Example Response:
      * {
-     *     "id": "1152e843-e3c5-40f1-8fad-b03d445591a0",
-     *     "name": "New Version",
-     *     "description": "Service description",
-     *     "createdAt": "2024-03-01T12:00:00Z",
-     *     "updatedAt": "2024-03-01T12:00:00Z",
-     *     "serviceId": "550e8400-e29b-41d4-a716-446655440000"
-     * }
+     *     "id":"66ca11ab-ba54-41e6-91db-70302c418939",
+     *     "name":"New Version",
+     *     "description":"Version description",
+     *     "createdAt":"2025-03-02T02:54:55.566Z",
+     *     "updatedAt":"2025-03-02T02:54:55.566Z",
+     *     "serviceId":"97a60546-8205-40f2-b392-8c46cdce9cb9"
+ *     }
      */
     @Post()
     @UsePipes(new ValidationPipe({ whitelist: true, transform: true, forbidNonWhitelisted: true }))
     async createVersion(@Body() newVersion: CreateVersionRequestDto): Promise<VersionResponseDto> {
         try {
-            const result = await this.versionDao.createVersion(newVersion);
+            const result = await this.versionDao.createVersion(
+                ResponseDtoTransformer.toVersion(newVersion)
+            );
 
             if (!result) {
                 throw new ConflictException("Duplicate version name for this service");
@@ -99,7 +99,7 @@ export class VersionController {
      *     - 500 Internal Server Error - If an unexpected error occurs
      *
      * Example request:
-     *     GET /api/versions/1152e843-e3c5-40f1-8fad-b03d445591a0
+     *     curl -X GET http://localhost:3000/api/versions/1152e843-e3c5-40f1-8fad-b03d445591a0
      * Example response:
      * {
      *     "id":"1152e843-e3c5-40f1-8fad-b03d445591a0",
@@ -151,19 +151,17 @@ export class VersionController {
      *     - 500 Internal Server Error - If an unexpected error occurs
      *
      * Example Request:
-     *     PATCH /api/versions/550e8400-e29b-41d4-a716-446655440000
-     *     payload:
-     *     {
-     *       "name": "New Version Name",
-     *       "description": "Updated Version description"
-     *     }
+     *     curl -X PATCH http://localhost:3000/api/versions/1152e843-e3c5-40f1-8fad-b03d445591a0 \
+     *          -H "Content-Type: application/json" \
+     *          -d '{"name": "v10.0.1", "description": "new version"}'
      * Example Response:
      * {
-     *     "id": "550e8400-e29b-41d4-a716-446655440000",
-     *     "name": "New Version Name",
-     *     "description": "Updated Version description",
-     *     "createdAt": "2024-03-01T12:00:00Z",
-     *     "updatedAt": "2024-03-01T15:00:00Z"
+     *     "id": "1152e843-e3c5-40f1-8fad-b03d445591a0",
+     *     "name": "v10.0.1",
+     *     "description": "new version",
+     *     "createdAt":"2025-03-02T02:16:22.240Z",
+     *     "updatedAt":"2025-03-02T02:24:35.906Z",
+     *     "serviceId":"550e8400-e29b-41d4-a716-446655440000"
      * }
      */
     @Patch(":id")
@@ -206,7 +204,7 @@ export class VersionController {
      *     - 500 Internal Server Error - If an unexpected error occurs
      *
      * Example Request:
-     *     DELETE /api/versions/1152e843-e3c5-40f1-8fad-b03d445591a0
+     *      curl -X DELETE http://localhost:3000/api/versions/1152e843-e3c5-40f1-8fad-b03d445591a0
      * Example Response:
      *     204 No Content
      */

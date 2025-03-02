@@ -63,7 +63,7 @@ describe("VersionController (Unit Test)", () => {
 
             // Then
             expect(response.body).toEqual(expectedResponse);
-            expect(versionDao.createVersion).toHaveBeenCalledWith({ serviceId, name, description });
+            expect(versionDao.createVersion).toHaveBeenCalledWith({ name, description, service: {id: serviceId} });
         });
 
         it("given payload with missing field -> should return 400", async () => {
