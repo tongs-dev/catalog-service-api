@@ -46,6 +46,8 @@ To build and run this app locally you will need a few things:
 - Node.js (v20)
 - PostgreSQL (v15)
 - Docker (For containerized setup)
+- NVM ([instruction](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating)) ([troubleshooting on mac](https://github.com/nvm-sh/nvm?tab=readme-ov-file#troubleshooting-on-macos))
+- jq ([link](https://formulae.brew.sh/formula/jq))
 
 ## Getting started
 1. Clone the repository
@@ -61,34 +63,38 @@ cd catalog-service-api
 ```
 
 ## Building the project
-Build and run project tests using a one-stop script `./build-dev.sh`
-**Install dependencies & Build project**
+1. Use NVM to install and use the correct Node.js version
 ```bash
-./build-dev.sh
+nvm install
+nvm use
 ```
-**Rebuild the Database & Run Migrations**
+2. Build and run project tests using script `./build-dev.sh`
+
 ```bash
-./build-dev.sh rebuild-db
+# Install dependencies & Build project & Run All Tests
+./build-dev.sh rebuild-db run-tests
 ```
-**Run All Unit & Integration Tests**
-```bash
-./build-dev.sh run-tests
-```
-**Run ITs / UTs**
+3. Run ITs / UTs separately using npm command
 ```bash
 npm run test:it
 npm run test:unit
 ```
 
 ## Running the app
-1. Run the application
+1. Run the app
 ```bash
+# Before running the app, restart docker containers and rebuild db to load testing data
+./docker-delete-containers.sh
+./docker-start-containers.sh
 ./build-dev.sh rebuild-db
+
+# Start server
 npm run start
 ```
 
-2. Navigate to `http://localhost:3000` and you should see the template being served and rendered locally!
-API Endpoints
+2. Navigate to `http://localhost:3000/api/{service_name}` and you should see the template being served and rendered locally!
+
+More **request examples** are listed in `src/controller/service.controller.ts` and `src/controller/version.controller.ts`.
 ```
 - Service Endpoints: 
 GET /services - Retrieve all services
@@ -100,7 +106,7 @@ DELETE /services/:id - Delete a service
 - Version Endpoints
 POST /versions - Create a version
 GET /versions/:id - Retrieve a version
-PUT /versions/:id - Update a version
+PATCH /versions/:id - Update a version
 DELETE /versions/:id - Delete a version
 ```
 
@@ -124,6 +130,7 @@ npm run migration:revert
 
 ## Integrating authentication/authorization on the API
 This project defines a secure API (http://localhost:3000/api/secure-resources) that uses JWT-based authentication to protect endpoints.
+
 If an unauthenticated request is made, the API will return:
 ```json
 {"statusCode":401,"message":"Unauthorized"}
@@ -131,6 +138,7 @@ If an unauthenticated request is made, the API will return:
 Below is a guide on how to request resources.
 
 1. User Registration
+
 Before authenticating, users must register.
 ```bash
 ENCRYPTED_PWD=$(curl -s -X POST http://localhost:3000/api/auth/register \
@@ -142,6 +150,7 @@ echo "Hashed Password: $ENCRYPTED_PWD"
 This creates a new user and stores the hashed password.
 
 2. Login
+
 Registered users can authenticate to receive a JWT token using username and password.
 ```bash
 ACCESS_TOKEN=$(curl -s -X POST http://localhost:3000/api/auth/login \
