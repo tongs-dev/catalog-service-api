@@ -8,7 +8,7 @@ It is built using TypeORM with PostgreSQL as the database and supports full CRUD
 TypeScript (`.ts`) files live in the `src` folder and after compilation are output as JavaScript (`.js`) in the `dist` folder.
 The full folder structure of this app is explained below:
 
-```json
+```
 ├── src
 │   ├── auth                      # Logic for handling authentication/authorization on secure API
 │   │   ├──controller             # Auth controller for handling authentication-related operations
